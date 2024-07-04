@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, List, ListItem, ListItemText, Divider, Typography } from '@mui/material';
+import { Box, Container, List, ListItem, ListItemText, Divider, Typography, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { checkAdminSession } from '../lib/auth';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminDrawer from '../components/AdminDrawer';
 
@@ -9,10 +9,18 @@ const AdminSettingsPage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { tournamentId } = useParams<{ tournamentId: string }>();
   const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentField, setCurrentField] = useState('');
+  const [currentValue, setCurrentValue] = useState('');
+  const [settings, setSettings] = useState({
+    title: 'FNST',
+    subtitle: 'Dublin LTC',
+    adminPassword: 'adminpassword123',
+    userPassword: 'userpassword123'
+  });
 
   useEffect(() => {
-    const sessionCookie = Cookies.get('admin-session');
-    if (!sessionCookie) {
+    if (!checkAdminSession()) {
       navigate(`/tournament/${tournamentId}/admin`);
     }
   }, [navigate, tournamentId]);
@@ -20,6 +28,26 @@ const AdminSettingsPage: React.FC = () => {
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  const handleDialogOpen = (field: string, value: string) => {
+    setCurrentField(field);
+    setCurrentValue(value);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleSave = () => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      [currentField]: currentValue
+    }));
+    setDialogOpen(false);
+  };
+
+  const getObscuredValue = (value: string) => '****';
 
   return (
     <Box sx={{ width: '100%', height: '100vh', overflow: 'auto', position: 'relative' }}>
@@ -31,17 +59,17 @@ const AdminSettingsPage: React.FC = () => {
             ADMIN SETTINGS
           </Typography>
           <List>
-            <ListItem>
-              <ListItemText primary="Tournament Title" secondary="FNST" />
+            <ListItem button onClick={() => handleDialogOpen('title', settings.title)}>
+              <ListItemText primary="Tournament Title" secondary={settings.title} />
             </ListItem>
-            <ListItem>
-              <ListItemText primary="Tournament Subtitle" secondary="Dublin LTC" />
+            <ListItem button onClick={() => handleDialogOpen('subtitle', settings.subtitle)}>
+              <ListItemText primary="Tournament Subtitle" secondary={settings.subtitle} />
             </ListItem>
-            <ListItem>
-              <ListItemText primary="Admin Password" secondary="****" />
+            <ListItem button onClick={() => handleDialogOpen('adminPassword', settings.adminPassword)}>
+              <ListItemText primary="Admin Password" secondary={getObscuredValue(settings.adminPassword)} />
             </ListItem>
-            <ListItem>
-              <ListItemText primary="User Password" secondary="****" />
+            <ListItem button onClick={() => handleDialogOpen('userPassword', settings.userPassword)}>
+              <ListItemText primary="User Password" secondary={getObscuredValue(settings.userPassword)} />
             </ListItem>
           </List>
           <Divider sx={{ my: 4 }} />
@@ -58,6 +86,28 @@ const AdminSettingsPage: React.FC = () => {
           </List>
         </Box>
       </Container>
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>Edit {currentField}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label={currentField}
+            type={currentField.includes('Password') ? 'password' : 'text'}
+            fullWidth
+            value={currentValue}
+            onChange={(e) => setCurrentValue(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

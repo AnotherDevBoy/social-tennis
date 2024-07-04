@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { checkAdminSession } from '../lib/auth';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminDrawer from '../components/AdminDrawer';
 import { People as PeopleIcon, AccessTime as AccessTimeIcon } from '@mui/icons-material';
@@ -12,8 +12,7 @@ const AdminDashboardPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sessionCookie = Cookies.get('admin-session');
-    if (!sessionCookie) {
+    if (!checkAdminSession()) {
       navigate(`/tournament/${tournamentId}/admin`);
     }
   }, [navigate, tournamentId]);

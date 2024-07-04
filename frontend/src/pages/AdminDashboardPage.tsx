@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, AppBar, Toolbar, IconButton, Card, CardContent, Button, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, ListSubheader } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Menu as MenuIcon, Notifications as NotificationsIcon, Home as HomeIcon, Settings as SettingsIcon, Person as PersonIcon, People as PeopleIcon, Numbers as NumbersIcon, AccessTime as AccessTimeIcon } from '@mui/icons-material';
+import Cookies from 'js-cookie';
 
-const AuthenticatedAdminPage: React.FC = () => {
+const AdminDashboardPage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { tournamentId } = useParams<{ tournamentId: string }>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const sessionCookie = Cookies.get('admin-session');
+    if (!sessionCookie) {
+      navigate(`/tournament/${tournamentId}/admin`);
+    }
+  }, [navigate, tournamentId]);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -32,10 +41,10 @@ const AuthenticatedAdminPage: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
-        <Box sx={{ width: 250 }} role="presentation" onClick={handleDrawerToggle} onKeyDown={handleDrawerToggle}>
+        <Box sx={{ width: 250 }} role="presentation">
           <List>
             <ListSubheader>Tournament</ListSubheader>
-            <ListItem button onClick={() => handleNavigation('/tournament/:tournamentId/admin')}>
+            <ListItem button onClick={() => handleNavigation(`/tournament/${tournamentId}/admin/dashboard`)}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -103,4 +112,4 @@ const AuthenticatedAdminPage: React.FC = () => {
   );
 };
 
-export default AuthenticatedAdminPage;
+export default AdminDashboardPage;

@@ -3,7 +3,8 @@ import HomePage from './pages/HomePage';
 import PlayerLoginPage from './pages/PlayerLoginPage';
 import PlayerEntryListPage from './pages/PlayerEntryListPage';
 import ScoresPage from './pages/ScoresPage';
-import AdminHomePage from './pages/AdminHomePage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 import TournamentCreationPage from './pages/TournamentCreationPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { ThemeProvider, CssBaseline } from '@mui/material';
@@ -20,7 +21,8 @@ function App() {
           <Route path="/tournament/:tournamentId" element={<PlayerLoginPage />} />
           <Route path="/tournament/:tournamentId/players" element={<PlayerEntryListPage />} />
           <Route path="/tournament/:tournamentId/scores" element={<ScoresPage />} />
-          <Route path="/tournament/:tournamentId/admin" element={<AdminHomePage />} />
+          <Route path="/tournament/:tournamentId/admin" element={<AdminLoginPage />} />
+          <Route path="/tournament/:tournamentId/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

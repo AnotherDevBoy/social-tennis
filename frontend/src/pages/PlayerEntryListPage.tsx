@@ -51,13 +51,14 @@ const FloatingButton = styled(Fab)({
 
 const PlayerEntryListPage: React.FC = () => {
   const [value, setValue] = useState(0);
-  const [players, setPlayers] = useState<Player[]>(generateRandomPlayers(50));
+  const [playersA, setPlayersA] = useState<Player[]>(generateRandomPlayers(50));
+  const [playersB, setPlayersB] = useState<Player[]>(generateRandomPlayers(50));
+  const [playersC, setPlayersC] = useState<Player[]>(generateRandomPlayers(50));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    setPlayers(generateRandomPlayers(50));
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,6 +78,17 @@ const PlayerEntryListPage: React.FC = () => {
     setDialogOpen(false);
   };
 
+  const handleSave = (newPlayer: Player, level: string) => {
+    if (level === 'A') {
+      setPlayersA((prev) => [...prev, newPlayer]);
+    } else if (level === 'B') {
+      setPlayersB((prev) => [...prev, newPlayer]);
+    } else if (level === 'C') {
+      setPlayersC((prev) => [...prev, newPlayer]);
+    }
+    setDialogOpen(false);
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
@@ -90,7 +102,7 @@ const PlayerEntryListPage: React.FC = () => {
         </Tabs>
         <TabPanel value={value} index={0}>
           <List>
-            {players.map((player, index) => (
+            {playersA.map((player, index) => (
               <React.Fragment key={index}>
                 <ListItem>
                   <ListItemAvatar>
@@ -98,14 +110,14 @@ const PlayerEntryListPage: React.FC = () => {
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
                 </ListItem>
-                {index < players.length - 1 && <Divider />}
+                {index < playersA.length - 1 && <Divider />}
               </React.Fragment>
             ))}
           </List>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <List>
-            {players.map((player, index) => (
+            {playersB.map((player, index) => (
               <React.Fragment key={index}>
                 <ListItem>
                   <ListItemAvatar>
@@ -113,14 +125,14 @@ const PlayerEntryListPage: React.FC = () => {
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
                 </ListItem>
-                {index < players.length - 1 && <Divider />}
+                {index < playersB.length - 1 && <Divider />}
               </React.Fragment>
             ))}
           </List>
         </TabPanel>
         <TabPanel value={value} index={2}>
           <List>
-            {players.map((player, index) => (
+            {playersC.map((player, index) => (
               <React.Fragment key={index}>
                 <ListItem>
                   <ListItemAvatar>
@@ -128,7 +140,7 @@ const PlayerEntryListPage: React.FC = () => {
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
                 </ListItem>
-                {index < players.length - 1 && <Divider />}
+                {index < playersC.length - 1 && <Divider />}
               </React.Fragment>
             ))}
           </List>
@@ -154,7 +166,7 @@ const PlayerEntryListPage: React.FC = () => {
       >
         <MenuItem onClick={handleMenuItemClick}>Join Tournament</MenuItem>
       </Popover>
-      <RegistrationDialog open={dialogOpen} onClose={handleCloseDialog} />
+      <RegistrationDialog open={dialogOpen} onClose={handleCloseDialog} onSave={handleSave} />
     </Container>
   );
 };

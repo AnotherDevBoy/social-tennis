@@ -8,9 +8,15 @@ import { Close as CloseIcon } from '@mui/icons-material';
 interface RegistrationDialogProps {
   open: boolean;
   onClose: () => void;
+  onSave: (newPlayer: Player, level: string) => void;
 }
 
-const RegistrationDialog: React.FC<RegistrationDialogProps> = ({ open, onClose }) => {
+interface Player {
+  name: string;
+  gender: 'male' | 'female' | 'other';
+}
+
+const RegistrationDialog: React.FC<RegistrationDialogProps> = ({ open, onClose, onSave }) => {
   const [formValues, setFormValues] = useState({ firstName: '', surname: '', email: '', gender: '', level: '' });
   const [formErrors, setFormErrors] = useState({ firstName: false, surname: false, email: false, gender: false, level: false });
 
@@ -52,7 +58,14 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({ open, onClose }
 
     if (!errors.firstName && !errors.surname && !errors.email && !errors.gender && !errors.level) {
       // Form is valid, proceed with save
+      const newPlayer: Player = {
+        name: `${formValues.firstName} ${formValues.surname}`,
+        gender: formValues.gender as 'male' | 'female' | 'other',
+      };
+      onSave(newPlayer, formValues.level);
       onClose();
+      setFormValues({ firstName: '', surname: '', email: '', gender: '', level: '' });
+      setFormErrors({ firstName: false, surname: false, email: false, gender: false, level: false });
     }
   };
 

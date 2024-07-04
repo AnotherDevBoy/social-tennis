@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import {
-  Container, Tabs, Tab, Box, Fab, Dialog, AppBar, Toolbar, IconButton, Typography, Button, Select, MenuItem, FormControl, InputLabel, Divider
-} from '@mui/material';
+import { Container, Tabs, Tab, Box, Fab } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { faker } from '@faker-js/faker';
+import ScoresDialog from '../components/ScoresDialog';
 
 interface Score {
   id: number;
@@ -73,8 +72,9 @@ const ScoresPage: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleSave = () => {
+  const handleSaveScores = (scores: number[][]) => {
     // Handle save logic here
+    console.log('Saved scores:', scores);
     setDialogOpen(false);
   };
 
@@ -141,49 +141,7 @@ const ScoresPage: React.FC = () => {
       <FloatingButton color="primary" aria-label="add" onClick={handleOpenDialog}>
         <AddIcon />
       </FloatingButton>
-      <Dialog fullScreen open={dialogOpen} onClose={handleCloseDialog}>
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleCloseDialog} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ flex: 1 }} variant="h6" component="div">
-              Scores
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleSave}>
-              Save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Box p={3}>
-          {['Set 1', 'Set 2', 'Set 3'].map((set, index) => (
-            <Box key={index} mb={3}>
-              <Typography variant="h6">{set}</Typography>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Score</InputLabel>
-                <Select>
-                  {[...Array(8)].map((_, num) => (
-                    <MenuItem key={num} value={num}>
-                      {num}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Score</InputLabel>
-                <Select>
-                  {[...Array(8)].map((_, num) => (
-                    <MenuItem key={num} value={num}>
-                      {num}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {index < 2 && <Divider />}
-            </Box>
-          ))}
-        </Box>
-      </Dialog>
+      <ScoresDialog open={dialogOpen} onClose={handleCloseDialog} onSave={handleSaveScores} />
     </Container>
   );
 };

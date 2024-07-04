@@ -1,13 +1,27 @@
-// src/theme.ts
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#00953B',  // Wimbledon green
     },
     secondary: {
-      main: '#dc004e',
+      main: '#613687',  // Wimbledon purple
+    },
+    background: {
+      default: '#ffffff',
+    },
+    text: {
+      primary: '#000000',
+      secondary: '#613687',
+    },
+  },
+  typography: {
+    h3: {
+      fontWeight: 700,
+    },
+    h5: {
+      fontWeight: 500,
     },
   },
 });

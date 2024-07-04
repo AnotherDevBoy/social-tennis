@@ -1,12 +1,12 @@
-// src/pages/PlayerEntryListPage.tsx
 import React, { useState } from 'react';
 import {
-  Container, Tabs, Tab, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, Divider, Fab, Popover, MenuItem,
+  Container, Tabs, Tab, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction, IconButton, Divider, Fab
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { faker } from '@faker-js/faker';
 import RegistrationDialog from '../components/RegistrationDialog';
+import UserVerificationDialog from '../components/UserVerificationDialog';
 
 type Gender = 'male' | 'female' | 'other';
 
@@ -54,23 +54,14 @@ const PlayerEntryListPage: React.FC = () => {
   const [playersA, setPlayersA] = useState<Player[]>(generateRandomPlayers(50));
   const [playersB, setPlayersB] = useState<Player[]>(generateRandomPlayers(50));
   const [playersC, setPlayersC] = useState<Player[]>(generateRandomPlayers(50));
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = () => {
-    handleClosePopover();
+  const handleOpenDialog = () => {
     setDialogOpen(true);
   };
 
@@ -89,8 +80,19 @@ const PlayerEntryListPage: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const handleOpenVerifyDialog = () => {
+    setVerifyDialogOpen(true);
+  };
+
+  const handleCloseVerifyDialog = () => {
+    setVerifyDialogOpen(false);
+  };
+
+  const handleConfirmVerifyDialog = (email: string) => {
+    // Handle confirm logic here
+    console.log('Verified email:', email);
+    setVerifyDialogOpen(false);
+  };
 
   return (
     <Container>
@@ -109,6 +111,14 @@ const PlayerEntryListPage: React.FC = () => {
                     <Avatar>{genderIcons[player.gender]}</Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="edit" onClick={handleOpenVerifyDialog}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" sx={{ color: 'red' }} onClick={handleOpenVerifyDialog}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
                 {index < playersA.length - 1 && <Divider />}
               </React.Fragment>
@@ -124,6 +134,14 @@ const PlayerEntryListPage: React.FC = () => {
                     <Avatar>{genderIcons[player.gender]}</Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="edit" onClick={handleOpenVerifyDialog}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" sx={{ color: 'red' }} onClick={handleOpenVerifyDialog}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
                 {index < playersB.length - 1 && <Divider />}
               </React.Fragment>
@@ -139,6 +157,14 @@ const PlayerEntryListPage: React.FC = () => {
                     <Avatar>{genderIcons[player.gender]}</Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={player.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="edit" onClick={handleOpenVerifyDialog}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete" sx={{ color: 'red' }} onClick={handleOpenVerifyDialog}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
                 {index < playersC.length - 1 && <Divider />}
               </React.Fragment>
@@ -146,27 +172,15 @@ const PlayerEntryListPage: React.FC = () => {
           </List>
         </TabPanel>
       </Box>
-      <FloatingButton color="primary" aria-label="add" onClick={handleButtonClick}>
+      <FloatingButton color="primary" aria-label="add" onClick={handleOpenDialog}>
         <AddIcon />
       </FloatingButton>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClosePopover}
-        disableScrollLock // This allows scrolling when the popover is open
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-      >
-        <MenuItem onClick={handleMenuItemClick}>Join Tournament</MenuItem>
-      </Popover>
       <RegistrationDialog open={dialogOpen} onClose={handleCloseDialog} onSave={handleSave} />
+      <UserVerificationDialog
+        open={verifyDialogOpen}
+        onClose={handleCloseVerifyDialog}
+        onConfirm={handleConfirmVerifyDialog}
+      />
     </Container>
   );
 };

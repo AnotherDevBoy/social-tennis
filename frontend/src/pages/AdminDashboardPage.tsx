@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, AppBar, Toolbar, IconButton, Card, CardContent, Button, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, ListSubheader } from '@mui/material';
+import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Menu as MenuIcon, Notifications as NotificationsIcon, Home as HomeIcon, Settings as SettingsIcon, Person as PersonIcon, People as PeopleIcon, Numbers as NumbersIcon, AccessTime as AccessTimeIcon } from '@mui/icons-material';
 import Cookies from 'js-cookie';
+import AdminAppBar from '../components/AdminAppBar';
+import AdminDrawer from '../components/AdminDrawer';
+import { People as PeopleIcon, AccessTime as AccessTimeIcon } from '@mui/icons-material';
 
 const AdminDashboardPage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -20,65 +22,10 @@ const AdminDashboardPage: React.FC = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setDrawerOpen(false);
-  };
-
   return (
     <Box sx={{ width: '100%', height: '100vh', overflow: 'auto', position: 'relative', pb: 8 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            FNST
-          </Typography>
-          <IconButton edge="end" color="inherit" aria-label="notifications">
-            <NotificationsIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
-        <Box sx={{ width: 250 }} role="presentation">
-          <List>
-            <ListSubheader>Tournament</ListSubheader>
-            <ListItem button onClick={() => handleNavigation(`/tournament/${tournamentId}/admin/dashboard`)}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItem>
-            <Divider />
-            <ListSubheader>Player</ListSubheader>
-            <ListItem button>
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary="Entries" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
-              <ListItemText primary="Pairings" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <NumbersIcon />
-              </ListItemIcon>
-              <ListItemText primary="Scores" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
+      <AdminAppBar onMenuClick={handleDrawerToggle} />
+      <AdminDrawer open={drawerOpen} onClose={handleDrawerToggle} />
       <Box p={2} sx={{ width: '100%' }}>
         <Card sx={{ mb: 2 }}>
           <CardContent>

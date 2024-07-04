@@ -1,5 +1,5 @@
 // src/pages/PlayerEntryListPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container, Tabs, Tab, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, Divider, Fab, Popover, MenuItem,
 } from '@mui/material';

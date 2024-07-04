@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import { Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 
 interface AdminAppBarProps {
@@ -13,9 +13,11 @@ const AdminAppBar: React.FC<AdminAppBarProps> = ({ onMenuClick }) => {
         <IconButton edge="start" color="inherit" aria-label="menu" onClick={onMenuClick}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          FNST
-        </Typography>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+          <Typography variant="h6">
+            FNST
+          </Typography>
+        </Box>
         <IconButton edge="end" color="inherit" aria-label="notifications">
           <NotificationsIcon />
         </IconButton>

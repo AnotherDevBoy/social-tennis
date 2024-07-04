@@ -25,7 +25,7 @@ const AdminSettingsPage: React.FC = () => {
     <Box sx={{ width: '100%', height: '100vh', overflow: 'auto', position: 'relative' }}>
       <AdminAppBar onMenuClick={handleDrawerToggle} />
       <AdminDrawer open={drawerOpen} onClose={handleDrawerToggle} />
-      <Container maxWidth="sm">
+      <Container maxWidth={false}>
         <Box mt={4}>
           <Typography variant="h5" gutterBottom>
             ADMIN SETTINGS

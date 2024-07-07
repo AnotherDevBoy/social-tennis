@@ -36,7 +36,7 @@ const AdminDrawer: React.FC<AdminDrawerProps> = ({ open, onClose }) => {
           </ListItem>
           <Divider />
           <ListSubheader>Player</ListSubheader>
-          <ListItem button>
+          <ListItem button onClick={() => handleNavigation(`/tournament/${tournamentId}/admin/players`)}>
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
@@ -48,7 +48,7 @@ const AdminDrawer: React.FC<AdminDrawerProps> = ({ open, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Pairings" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => handleNavigation(`/tournament/${tournamentId}/admin/scores`)}>
             <ListItemIcon>
               <NumbersIcon />
             </ListItemIcon>

@@ -12,7 +12,7 @@
 {
     "name": "Alfred",
     "surname": "Smith",
-    "email": "email.gmail.com",
+    "email": "email@gmail.com",
     "level": "A"
 }
 ```

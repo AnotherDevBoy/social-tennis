@@ -120,9 +120,12 @@ const AdminPairingsPage: React.FC = () => {
       return pairing;
     });
 
+    // Filter out empty pairings
+    const nonEmptyPairings = swappedPairings.filter(pairing => pairing.player1.name !== '' || (pairing.player2 && pairing.player2.name !== ''));
+
     setPairings((prevPairings) => ({
       ...prevPairings,
-      [currentLevel]: swappedPairings,
+      [currentLevel]: nonEmptyPairings,
     }));
     handleDialogClose();
   };

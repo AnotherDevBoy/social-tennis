@@ -1,97 +1,33 @@
 import React, { useState } from 'react';
-import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Fab, Popover, List, ListItem, ListItemText } from '@mui/material';
+import {
+  Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Fab, Popover, List, ListItem, ListItemText
+} from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminDrawer from '../components/AdminDrawer';
 import LevelTabs from '../components/LevelTabs';
+import PairingDialog from '../components/PairingDialog';
+import {
+  generatePairings, shuffleArray, shuffleByGender,
+  Player, Pairing, Pairings
+} from '../lib/pairing';
 
-const generateRandomName = () => {
-  const firstNames = ['John', 'Jane', 'Alice', 'Bob', 'Charlie', 'Diana', 'Frank', 'Grace', 'Hank', 'Ivy'];
-  const lastNames = ['Doe', 'Smith', 'Johnson', 'Brown', 'Davis', 'Evans', 'Green', 'Harris', 'Irving', 'Jackson'];
-  const genders = ['Male', 'Female'];
-  const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-  const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-  const gender = genders[Math.floor(Math.random() * genders.length)];
-  return { name: `${firstName} ${lastName}`, gender };
-};
-
-const generatePairings = (count: number) => {
-  const pairings = [];
-  for (let i = 0; i < count; i++) {
-    pairings.push({ id: i, player1: generateRandomName(), player2: generateRandomName() });
-  }
-  return pairings;
-};
-
-const fakePairings = {
+const fakePairings: Pairings = {
   A: generatePairings(10),
   B: generatePairings(10),
   C: generatePairings(10),
 };
 
 type PairingLevel = 'A' | 'B' | 'C';
-type Player = { name: string; gender: string };
-type Pairing = { id: number; player1: Player; player2: Player | null };
-type Pairings = { [key in PairingLevel]: Pairing[] };
-
-const shuffleArray = (array: any[]) => {
-  return array
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-};
-
-const shuffleByGender = (pairings: Pairing[]) => {
-  const males: Player[] = [];
-  const females: Player[] = [];
-
-  pairings.forEach(pairing => {
-    if (pairing.player1.gender === 'Male') {
-      males.push(pairing.player1);
-    } else {
-      females.push(pairing.player1);
-    }
-
-    if (pairing.player2) {
-      if (pairing.player2.gender === 'Male') {
-        males.push(pairing.player2);
-      } else {
-        females.push(pairing.player2);
-      }
-    }
-  });
-
-  const shuffledPairings: Pairing[] = [];
-  const maxPairs = Math.min(males.length, females.length);
-
-  for (let i = 0; i < maxPairs; i++) {
-    shuffledPairings.push({
-      id: i,
-      player1: males[i],
-      player2: females[i],
-    });
-  }
-
-  // Add remaining unpaired players
-  const remainingMales = males.slice(maxPairs);
-  const remainingFemales = females.slice(maxPairs);
-
-  let remainingId = maxPairs;
-  remainingMales.forEach(male => {
-    shuffledPairings.push({ id: remainingId++, player1: male, player2: null });
-  });
-  remainingFemales.forEach(female => {
-    shuffledPairings.push({ id: remainingId++, player1: female, player2: null });
-  });
-
-  return shuffledPairings;
-};
 
 const AdminPairingsPage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentLevel, setCurrentLevel] = useState<PairingLevel>('A');
   const [pairings, setPairings] = useState<Pairings>(fakePairings);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPairing, setSelectedPairing] = useState<Pairing | null>(null);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -111,7 +47,6 @@ const AdminPairingsPage: React.FC = () => {
 
   const handleMenuItemClick = (option: string) => {
     if (option === 'Random') {
-      // Collect all players into a single array for shuffling
       const allPlayers: Player[] = [];
       pairings[currentLevel].forEach(pairing => {
         allPlayers.push(pairing.player1);
@@ -153,8 +88,49 @@ const AdminPairingsPage: React.FC = () => {
     handleClose();
   };
 
+  const handleRowClick = (pairing: Pairing) => {
+    setSelectedPairing(pairing);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setSelectedPairing(null);
+  };
+
+  const handleSave = (updatedPairing: Pairing, oldPlayer1: string, oldPlayer2: string) => {
+    const updatedPairings = pairings[currentLevel].map(pairing => {
+      if (pairing.id === updatedPairing.id) {
+        return updatedPairing;
+      }
+      return pairing;
+    });
+
+    // Perform the swap
+    const swappedPairings = updatedPairings.map(pairing => {
+      if (pairing.player1.name === updatedPairing.player2?.name && pairing.id !== updatedPairing.id) {
+        return { ...pairing, player1: { ...pairing.player1, name: oldPlayer2 } };
+      } else if (pairing.player2 && pairing.player2.name === updatedPairing.player2?.name && pairing.id !== updatedPairing.id) {
+        return { ...pairing, player2: { ...pairing.player2, name: oldPlayer2 } };
+      } else if (pairing.player1.name === updatedPairing.player1.name && pairing.id !== updatedPairing.id) {
+        return { ...pairing, player1: { ...pairing.player1, name: oldPlayer1 } };
+      } else if (pairing.player2 && pairing.player2.name === updatedPairing.player1.name && pairing.id !== updatedPairing.id) {
+        return { ...pairing, player2: { ...pairing.player2, name: oldPlayer1 } };
+      }
+      return pairing;
+    });
+
+    setPairings((prevPairings) => ({
+      ...prevPairings,
+      [currentLevel]: swappedPairings,
+    }));
+    handleDialogClose();
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+
+  const allPlayers = pairings[currentLevel].flatMap(pairing => [pairing.player1, pairing.player2]).filter(player => player) as Player[];
 
   return (
     <Box sx={{ width: '100%', height: '100vh', overflow: 'auto', position: 'relative' }}>
@@ -173,7 +149,7 @@ const AdminPairingsPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {pairings[currentLevel].map((pairing) => (
-                  <TableRow key={pairing.id}>
+                  <TableRow key={pairing.id} onClick={() => handleRowClick(pairing)} sx={{ cursor: 'pointer' }}>
                     <TableCell sx={{ textAlign: 'center' }}>{pairing.player1.name}</TableCell>
                     <TableCell sx={{ textAlign: 'center' }}>{pairing.player2 ? pairing.player2.name : ''}</TableCell>
                   </TableRow>
@@ -209,6 +185,13 @@ const AdminPairingsPage: React.FC = () => {
           </ListItem>
         </List>
       </Popover>
+      <PairingDialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        onSave={handleSave}
+        players={allPlayers}
+        selectedPairing={selectedPairing}
+      />
     </Box>
   );
 };

@@ -33,15 +33,6 @@
 
 ### Error Response
 
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
-
 **Code** : `400`
 
 ```json
@@ -91,15 +82,6 @@
 ```
 
 ### Error Response
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
 
 **Code** : `401`
 
@@ -165,15 +147,6 @@
 ```json
 {
     "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
     "message": "You don't have permissions to perform this action"
 }
 ```
@@ -193,7 +166,7 @@
 
 | URL                                            | Method | Auth |
 |------------------------------------------------|--------|------|
-| /tournament/<tournament_id>/player/<player_id> | Delete | Yes  |
+| /tournament/<tournament_id>/player/<player_id> | DELETE | Yes  |
 
 <details>
 
@@ -208,15 +181,6 @@
 **Code** : `202`
 
 ### Error Response
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
 
 **Code** : `401`
 

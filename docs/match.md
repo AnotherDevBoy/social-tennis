@@ -43,15 +43,6 @@
 
 ### Error Response
 
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
-
 **Code** : `400`
 
 ```json
@@ -95,15 +86,6 @@
 ```
 
 ### Error Response
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
 
 **Code** : `400`
 
@@ -167,15 +149,6 @@
 ```json
 {
     "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
     "message": "You don't have permissions to perform this action"
 }
 ```
@@ -219,15 +192,6 @@
 **Code** : `202`
 
 ### Error Response
-
-**Code** : `401`
-
-```json
-{
-    "error_code": "UNAUTHORIZED",
-    "message": "Unable to restore the session"
-}
-```
 
 **Code** : `401`
 

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ]
+  },
+  "include": ["src/**/*.ts", "src/types/express-session.d.ts"],
+  "exclude": ["node_modules"]
+}

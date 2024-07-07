@@ -42,7 +42,7 @@ const AdminDrawer: React.FC<AdminDrawerProps> = ({ open, onClose }) => {
             </ListItemIcon>
             <ListItemText primary="Entries" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => handleNavigation(`/tournament/${tournamentId}/admin/pairings`)}>
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
